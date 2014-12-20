@@ -41,22 +41,22 @@ define tinc::net(
   #   notify  => Service['tinc'],
   # }
 
-  # file { "/etc/tinc/${net_id}/hosts":
-  #   ensure  => 'directory',
-  #   owner   => 'root',
-  #   group   => 'root',
-  #   mode    => '0750',
-  #   purge   => true,
-  #   recurse => true,
-  #   notify  => Service['tinc'],
-  # }
+  file { "/etc/tinc/${net_id}/hosts":
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0750',
+    purge   => true,
+    recurse => true,
+    notify  => Service['tinc'],
+  }
 
   $net_member_nodes   = $nets[$net_id]['member_nodes']
-  $net_hosts_prefixed = prefix(keys($net_member_nodes), "${net_id}-")
-  notify { 'member_net_hosts':
-    message => inline_template("net_hosts_prefixed => <%= @net_hosts_prefixed.join(',') %>"),
+  $net_nodes_prefixed = prefix(keys($net_member_nodes), "${net_id}-")
+  notify { 'member_net_nodes':
+    message => inline_template("net_nodes_prefixed => <%= @net_nodes_prefixed.join(',') %>"),
   }
-  net_host{$net_hosts_prefixed:
+  net_host{$net_nodes_prefixed:
     member_nodes => $net_member_nodes,
     net_id       => $net_id,
   }

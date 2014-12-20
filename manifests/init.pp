@@ -14,8 +14,30 @@ class tinc(
   create_resources('package', $package_list)
   $package_array = keys($package_list)
 
+  file { '/etc/sysconfig/tinc':
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/tinc/tinc.sysconfig',
+  }
+
+  file { '/etc/init.d/tinc':
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/tinc/tinc.init',
+  }~>
+  exec { 'tinc-chkconfig':
+    command     => 'chkconfig --add tinc',
+    path        => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
+    refreshonly => true,
+    unless      => 'chkconfig --list | grep -q tinc'
+  }
+
   file { '/etc/tinc':
-    ensure  => directory,
+    ensure  => 'directory',
     owner   => 'root',
     group   => 'root',
     mode    => '0550',
@@ -23,7 +45,7 @@ class tinc(
     recurse => true,
   }->
   file { '/etc/tinc/nets.boot':
-    ensure  => file,
+    ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0440',
@@ -32,7 +54,14 @@ class tinc(
   service { $service_name:
     ensure  => $service_ensure,
     enable  => $service_enable,
-    require => Package[$package_array],
+    require => [
+      Package[$package_array],
+      File[
+        '/etc/tinc/nets.boot',
+        '/etc/init.d/tinc',
+        '/etc/sysconfig/tinc'
+      ]
+    ],
   }
 
   $net_defaults_override = $net_defaults_merge? {

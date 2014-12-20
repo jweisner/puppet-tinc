@@ -20,7 +20,7 @@ define tinc::net(
     owner   => 'root',
     group   => 'root',
     mode    => '0640',
-    content => template('tinc/tinc-up.erb'),,
+    content => template('tinc/tinc-up.erb'),
   }->
   file { "/etc/tinc/${net_id}/tinc-down":
     ensure  => 'file',

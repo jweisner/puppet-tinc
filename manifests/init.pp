@@ -14,13 +14,20 @@ class tinc(
   create_resources('package', $package_list)
   $package_array = keys($package_list)
 
+  file { '/etc/tinc':
+    ensure  => directory,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0550',
+    purge   => true,
+    recurse => true,
+  }->
   file { '/etc/tinc/nets.boot':
     ensure  => file,
     owner   => 'root',
     group   => 'root',
-    mode    => '0444',
+    mode    => '0440',
     content => '### WARNING: This file is controlled by Puppet ###',
-    require => Package[$package_array],
   }->
   service { $service_name:
     ensure  => $service_ensure,

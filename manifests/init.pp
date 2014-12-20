@@ -87,16 +87,18 @@ class tinc(
     default => hiera_hash('tinc::nets', $nets),
   }
 
-  notify { 'node_id':
-    message => "node_id => ${node_id}",
-  }
+  # notify { 'node_id':
+  #   message => "node_id => ${node_id}",
+  # }
 
-  notify { 'nets':
-    message => inline_template("nets => <%= @nets.keys.join(',') %>"),
-  }
+  # notify { 'nets':
+  #   message => inline_template("nets => <%= @nets.keys.join(',') %>"),
+  # }
 
   $member_nets = tinc_member_nets($nets_real, $::fqdn)
-  notify { 'member_nets':
-    message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
-  }
+  # notify { 'member_nets':
+  #   message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
+  # }
+
+  boot_net { $member_nets: }
 }

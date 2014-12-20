@@ -9,8 +9,8 @@ class tinc(
   $node_id            = regsubst($::hostname,'[._-]+','','G'),
   $package_list       = {'tinc' => {ensure => installed} },
   $service_name       = 'tinc',
-  $service_enable     = true,
-  $service_ensure     = 'running',
+  $service_enable     = false,     ### TEMPORARY FOR DEBUGGING
+  $service_ensure     = 'stopped', ### TEMPORARY FOR DEBUGGING
 ){
   create_resources('package', $package_list)
   $package_array = keys($package_list)
@@ -88,13 +88,13 @@ class tinc(
     default => hiera_hash('tinc::nets', $nets),
   }
 
-  notify { 'node_id':
-    message => "node_id => ${node_id}",
-  }
+  # notify { 'node_id':
+  #   message => "node_id => ${node_id}",
+  # }
 
-  notify { 'nets':
-    message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
-  }
+  # notify { 'nets':
+  #   message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
+  # }
 
   $member_nets = tinc_member_nets($nets_real, $::fqdn)
   notify { 'member_nets':

@@ -51,7 +51,7 @@ class tinc(
     group   => 'root',
     mode    => '0440',
     content => "### WARNING: This file is controlled by Puppet ###\n",
-  }->
+  }~>
   service { $service_name:
     ensure  => $service_ensure,
     enable  => $service_enable,

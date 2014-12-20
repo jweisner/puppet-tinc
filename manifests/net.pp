@@ -19,14 +19,14 @@ define tinc::net(
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0640',
+    mode    => '0750',
     content => template('tinc/tinc-up.erb'),
   }->
   file { "/etc/tinc/${net_id}/tinc-down":
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0640',
+    mode    => '0750',
     content => template('tinc/tinc-down.erb'),
   }->
   file { "/etc/tinc/${net_id}/tinc.conf":

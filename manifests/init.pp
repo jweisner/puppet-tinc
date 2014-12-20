@@ -95,7 +95,7 @@ class tinc(
     message => inline_template("nets => <%= @nets.keys.join(',') %>"),
   }
 
-  $member_nets = tinc_member_nets($nets_real, $node_id)
+  $member_nets = tinc_member_nets($nets_real, $::fqdn)
   notify { 'member_nets':
     message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
   }

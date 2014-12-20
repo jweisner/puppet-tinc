@@ -14,7 +14,7 @@ class tinc(
   create_resources('package', $package_list)
   $package_array = keys($package_list)
 
-  file { 'etc/tinc/nets.boot':
+  file { '/etc/tinc/nets.boot':
     ensure  => file,
     owner   => 'root',
     group   => 'root',

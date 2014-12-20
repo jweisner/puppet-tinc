@@ -6,6 +6,7 @@ class tinc(
   $net_defaults_merge = true,
   $nets               = {},
   $nets_merge         = true,
+  $node_id            = regsubst($::hostname,'[._-]+','','G'),
   $package_list       = {'tinc' => {ensure => installed} },
   $service_name       = 'tinc',
   $service_enable     = true,
@@ -75,7 +76,7 @@ class tinc(
     device         => '/dev/net/tun',
     mode           => 'router',
     net_enable     => true,
-    node_id        => $::hostname,
+    node_id        => regsubst($::hostname,'[._-]+','','G'),
     port           => '655',
   }
 
@@ -84,5 +85,10 @@ class tinc(
   $nets_real = $nets_merge? {
     false   => $nets,
     default => hiera_hash('tinc::nets', $nets),
+  }
+
+  $member_nets = tinc_member_nets($nets_real, $node_id)
+  notify { 'member_nets':
+    message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
   }
 }

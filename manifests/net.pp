@@ -53,6 +53,9 @@ define tinc::net(
 
   $net_member_nodes   = $nets[$net_id]['member_nodes']
   $net_hosts_prefixed = prefix(keys($net_member_nodes), "${net_id}-")
+  notify { 'member_nets':
+    message => inline_template("net_hosts_prefixed => <%= @net_hosts_prefixed.join(',') %>"),
+  }
   net_host{$net_hosts_prefixed:
     member_nodes => $net_member_nodes,
     net_id       => $net_id,

@@ -87,6 +87,10 @@ class tinc(
     default => hiera_hash('tinc::nets', $nets),
   }
 
+  notify { 'node_id':
+    message => "node_id => ${node_id}",
+  }
+
   notify { 'nets':
     message => inline_template("nets => <%= @member_nets.keys.join(',') %>"),
   }

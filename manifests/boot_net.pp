@@ -4,7 +4,7 @@ define tinc::boot_net(
 ){
   file_line { "tinc-boot-${net_id}":
     ensure => present,
-    path   => '/etc/tinc/boot.nets',
+    path   => '/etc/tinc/nets.boot',
     line   => $net_id,
   }
 }

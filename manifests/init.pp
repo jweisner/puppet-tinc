@@ -67,16 +67,12 @@ class tinc(
     ],
   }
 
-  $net_defaults_override = $net_defaults_merge? {
+  $net_defaults_hiera = $net_defaults_merge? {
     false   => $net_defaults,
     default => hiera_hash('tinc::net_defaults', $net_defaults)
   }
 
-  notify { 'net defaults:':
-    message => join(keys($net_defaults_override), ', ')
-  }
-
-  $net_defaults_all = {
+  $net_defaults_builtin = {
     ensure          => present,
     connectto       => [],
     device          => '/dev/net/tun',
@@ -87,22 +83,18 @@ class tinc(
     key_source_path => '/var/lib/puppet/tinc',
   }
 
-  notify { 'net_defaults_all:':
-    message => join(keys($net_defaults_all), ', ')
-  }
-
-  $net_defaults_real = merge($net_defaults_all, $net_defaults_override)
+  $net_defaults_real = merge($net_defaults_builtin, $net_defaults_hiera)
 
   notify { 'net_defaults_real:':
     message => join(keys($net_defaults_real), ', ')
   }
 
-  $nets_merged = $nets_merge? {
-    false   => $nets,
-    default => hiera_hash('tinc::nets', $nets),
-  }
+  # $nets_merged = $nets_merge? {
+  #   false   => $nets,
+  #   default => hiera_hash('tinc::nets', $nets),
+  # }
 
-  $nets_real = merge($net_defaults_real, $nets_merged)
+  # $nets_real = merge($net_defaults_real, $nets_merged)
 
   # notify { 'node_id':
   #   message => "node_id => ${node_id}",
@@ -112,10 +104,10 @@ class tinc(
   #   message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
   # }
 
-  notify { 'nets_real':
-    message => join(keys($nets_real['ptrpe']), ' ')
-  }
-  notify { "clientcert => ${::clientcert}": }
+  # notify { 'nets_real':
+  #   message => join(keys($nets_real['ptrpe']), ' ')
+  # }
+  # notify { "clientcert => ${::clientcert}": }
   # $member_nets = tinc_member_nets($nets_real, $::clientcert)
   # notify { 'member_nets':
   #   message => inline_template("member_nets => <%= @member_nets.join(',') %>"),

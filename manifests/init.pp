@@ -2,6 +2,8 @@
 # Author: Jesse Weisner <jesse@weisner.ca>
 # License: Apache 2.0
 class tinc(
+  $key_source_path    = '/var/lib/puppet/tinc',
+  $manage_init        = true,
   $net_defaults       = {},
   $net_defaults_merge = true,
   $nets               = {},
@@ -9,14 +11,11 @@ class tinc(
   $node_id            = regsubst($::hostname,'[._-]+','','G'),
   $package_list       = {'tinc' => {ensure => installed} },
   $service_name       = 'tinc',
-  $service_enable     = false,     ### TEMPORARY FOR DEBUGGING
-  $service_ensure     = 'stopped', ### TEMPORARY FOR DEBUGGING
+  $service_enable     = true,
+  $service_ensure     = 'running',
 ){
   create_resources('package', $package_list)
   $package_array = keys($package_list)
-
-  $test_netmask = tinc_cidr_to_netmask('29')
-  notify{ "test_netmask = ${test_netmask}": }
 
   file { '/etc/sysconfig/tinc':
     ensure => 'file',
@@ -24,6 +23,7 @@ class tinc(
     group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/tinc/tinc.sysconfig',
+    notify => Service[$service_name],
   }
 
   file { '/etc/init.d/tinc':
@@ -32,6 +32,7 @@ class tinc(
     group  => 'root',
     mode   => '0755',
     source => 'puppet:///modules/tinc/tinc.init',
+    notify => Service[$service_name],
   }~>
   exec { 'tinc-chkconfig':
     command     => 'chkconfig --add tinc',
@@ -83,41 +84,25 @@ class tinc(
     net_enable      => true,
     node_id         => regsubst($::hostname,'[.-]+','','G'),
     port            => '655',
-    key_source_path => '/var/lib/puppet/tinc',
   }
 
   $net_defaults_real = merge($net_defaults_builtin, $net_defaults_hiera)
-
-  notify { 'net_defaults_real:':
-    message => join(keys($net_defaults_real), ', ')
-  }
 
   $nets_real = $nets_merge? {
     false   => $nets,
     default => hiera_hash('tinc::nets', $nets),
   }
 
-  # notify { 'node_id':
-  #   message => "node_id => ${node_id}",
-  # }
-
-  # notify { 'nets':
-  #   message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
-  # }
-
-  # notify { 'nets_real':
-  #   message => join(keys($nets_real['ptrpe']), ' ')
-  # }
-  # notify { "clientcert => ${::clientcert}": }
-
   $member_nets = tinc_member_nets($nets_real, $::clientcert)
-  # notify { 'member_nets':
-  #   message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
-  # }
 
   net { $member_nets:
-    net_defaults => $net_defaults_real,
-    nets         => $nets_real
+    net_defaults    => $net_defaults_real,
+    nets            => $nets_real,
+    service_name    => $service_name,
+    key_source_path => $key_source_path,
   }
-  boot_net { $member_nets: }
+
+  boot_net { $member_nets:
+    service_name => $service_name,
+  }
 }

@@ -2,9 +2,11 @@
 #
 define tinc::net(
   $nets,
+  $net_defaults,
   $net_id = $name,
 ){
 
+  $net = merge($net_defaults, $nets[$net_id])
   $node_internal_ip      = '***MAGIC***'
   $node_internal_netmask = '***MAGIC***'
 
@@ -38,8 +40,7 @@ define tinc::net(
     content => template('tinc/tinc.conf.erb'),
   }
 
-  $key_source_path = $nets[$net_id]['key_source_path']
-  notify{ "${net_id} key_source_path = ${key_source_path}": }
+  $key_source_path = $net['key_source_path']
   file { "/etc/tinc/${net_id}/rsa_key.priv":
     ensure  => 'file',
     owner   => 'root',
@@ -58,7 +59,7 @@ define tinc::net(
     force   => true,
   }
 
-  $net_member_nodes   = $nets[$net_id]['member_nodes']
+  $net_member_nodes   = $net['member_nodes']
   $net_nodes_prefixed = prefix(keys($net_member_nodes), "${net_id}-")
   # notify { 'member_net_nodes':
   #   message => inline_template("net_nodes_prefixed => <%= @net_nodes_prefixed.join(',') %>"),
@@ -66,6 +67,6 @@ define tinc::net(
   net_host{$net_nodes_prefixed:
     member_nodes    => $net_member_nodes,
     net_id          => $net_id,
-    key_source_path => $nets[$net_id]['key_source_path'],
+    key_source_path => $net['key_source_path'],
   }
 }

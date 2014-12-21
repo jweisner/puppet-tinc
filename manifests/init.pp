@@ -85,16 +85,14 @@ class tinc(
 
   $net_defaults_real = merge($net_defaults_builtin, $net_defaults_hiera)
 
-  notify { 'net_defaults_real:':
-    message => join(keys($net_defaults_real), ', ')
-  }
-
-  # $nets_merged = $nets_merge? {
-  #   false   => $nets,
-  #   default => hiera_hash('tinc::nets', $nets),
+  # notify { 'net_defaults_real:':
+  #   message => join(keys($net_defaults_real), ', ')
   # }
 
-  # $nets_real = merge($net_defaults_real, $nets_merged)
+  $nets_real = $nets_merge? {
+    false   => $nets,
+    default => hiera_hash('tinc::nets', $nets),
+  }
 
   # notify { 'node_id':
   #   message => "node_id => ${node_id}",
@@ -108,11 +106,14 @@ class tinc(
   #   message => join(keys($nets_real['ptrpe']), ' ')
   # }
   # notify { "clientcert => ${::clientcert}": }
-  # $member_nets = tinc_member_nets($nets_real, $::clientcert)
+  $member_nets = tinc_member_nets($nets_real, $::clientcert)
   # notify { 'member_nets':
   #   message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
   # }
 
-  # net { $member_nets: nets => $nets_real }
+  net { $member_nets:
+    net_defaults => $net_defaults_real,
+    nets         => $nets_real
+  }
   # boot_net { $member_nets: }
 }

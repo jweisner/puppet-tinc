@@ -5,7 +5,7 @@ EOF
 ) do |args|
   raise Puppet::ParseError, "Wrong number of arguments" if args.to_a.length < 2 || args.to_a.length > 2
   tinc_nets = args.to_a[0]
-  clientcert = args.to_a[1]
+  clientcert = args.to_s[1]
 
   raise Puppet::ParseError, "First argument must be a hash" unless tinc_nets.is_a?(Hash)
   raise Puppet::ParseError, "Second argument must be a string" unless clientcert.is_a?(String)

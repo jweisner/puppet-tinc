@@ -84,10 +84,12 @@ class tinc(
 
   $net_defaults_real = merge($net_defaults_all, $net_defaults_override)
 
-  $nets_real = $nets_merge? {
+  $nets_merged = $nets_merge? {
     false   => $nets,
     default => hiera_hash('tinc::nets', $nets),
   }
+
+  $nets_real = merge($net_defaults_real, $nets_merged)
 
   # notify { 'node_id':
   #   message => "node_id => ${node_id}",

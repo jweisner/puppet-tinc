@@ -16,6 +16,7 @@ class tinc(
   $package_array = keys($package_list)
 
   $test_netmask = tinc_cidr_to_netmask('29')
+  notify{ "test_netmask = ${test_netmask}": }
 
   file { '/etc/sysconfig/tinc':
     ensure => 'file',

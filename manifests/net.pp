@@ -11,7 +11,12 @@ define tinc::net(
   $net_internal_ip = $net_internal[0]
   $net_internal_mask = tinc_cidr_to_netmask($net_internal[1])
 
-  $node_internal         = split($net['member_nodes'][$::clientcert]['internal_cidr'], '/')
+  $this_node = $net['member_nodes'][$::clientcert]
+
+  $node_id               = $this_node['node_id']
+  $device                = $this_node['device']
+  $connectto             = any2array($this_node['connectto'])
+  $node_internal         = split($this_node['internal_cidr'], '/')
   $node_internal_ip      = $node_internal[0]
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
 

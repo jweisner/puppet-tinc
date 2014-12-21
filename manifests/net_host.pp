@@ -20,6 +20,8 @@ define tinc::net_host(
   $public_key          = file("${key_source_path}/${net_id}/${node_certname}/rsa_key.pub", 'tinc/missing')
   $node_port           = pick($this_node['port'], $net['port'], 'none')
 
+  notify{$node_port: }
+
   file { "/etc/tinc/${net_id}/hosts/${node_id}":
     ensure  => 'file',
     owner   => 'root',

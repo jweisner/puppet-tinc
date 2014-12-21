@@ -27,8 +27,6 @@ define tinc::net(
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
   $node_port             = pick($this_node['port'], $net['port'], 'none')
 
-  # notify { "tinc::net ${node_id} ${node_port}": }
-
   file { "/etc/tinc/${net_id}":
     ensure  => 'directory',
     owner   => 'root',

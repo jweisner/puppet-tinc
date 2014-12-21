@@ -77,7 +77,7 @@ class tinc(
     device          => '/dev/net/tun',
     mode            => 'router',
     net_enable      => true,
-    node_id         => regsubst($::hostname,'[._-]+','','G'),
+    node_id         => regsubst($::hostname,'[.-]+','','G'),
     port            => '655',
     key_source_path => '/var/lib/puppet/tinc',
   }

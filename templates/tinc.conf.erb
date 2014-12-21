@@ -1,6 +1,6 @@
 ### WARNING: This file is controlled by Puppet ###
 Name = <%= node_id %>
 Device = <%= device %>
-<% connectto.each |connect_node_id| -%>
+<% connectto.each |connect_node_id| do -%>
 ConnectTo = <%= connect_node_id %>
 <% end -%>

@@ -1,7 +1,5 @@
-### tinc/templates/net_host.erb ###
-# net_id:        <%= net_id %>
-# node_id:       <%= node_id %>
-# node_certname: <%= node_certname %>
+### WARNING: This file is controlled by Puppet ###
 Address = <%= external_ip %>
+Port    = <%= node_port %>
 Subnet  = <%= internal_network %>
 <%= public_key %>

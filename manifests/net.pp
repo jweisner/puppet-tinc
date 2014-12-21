@@ -55,6 +55,7 @@ define tinc::net(
     mode    => '0750',
     purge   => true,
     recurse => true,
+    force   => true,
   }
 
   $net_member_nodes   = $nets[$net_id]['member_nodes']

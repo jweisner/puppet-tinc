@@ -5,7 +5,7 @@
 # License: Apache 2.0
 class tinc::puppetmaster (){
   $key_source_path = pick(hiera('tinc::key_source_path'), '/var/lib/puppet/tinc')
-  $nets            = pick(hiera_array('tinc::nets'), {})
+  $nets            = pick(hiera_hash('tinc::nets'), {})
   $nets_list       = keys($nets)
 
   puppetmaster_nets{$nets_list:

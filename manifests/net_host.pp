@@ -18,7 +18,7 @@ define tinc::net_host(
   $internal_prefix     = $internal_cidr_split[1]
   $internal_network    = "${internal_network_ip}/${internal_prefix}"
   $public_key          = file("${key_source_path}/${net_id}/${node_certname}/rsa_key.pub", 'tinc/missing')
-  $node_port           = pick($this_node['port'], $net['port'], '655')
+  $node_port           = pick($this_node['port'], $net['port'], '')
 
   file { "/etc/tinc/${net_id}/hosts/${node_id}":
     ensure  => 'file',

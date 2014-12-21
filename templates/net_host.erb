@@ -2,6 +2,8 @@
 <% if external_ip.to_s != '' -%>
 Address = <%= external_ip %>
 <% end -%>
+<% if node_port.to_s != '' -%>
 Port    = <%= node_port %>
+<% end -%>
 Subnet  = <%= internal_network %>
 <%= public_key %>

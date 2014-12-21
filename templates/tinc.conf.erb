@@ -1,7 +1,9 @@
 ### WARNING: This file is controlled by Puppet ###
 Name = <%= node_id %>
 Device = <%= device %>
+<% if node_port != '' -%>
 Port = <%= node_port %>
+<% end -%>
 <% connectto.each do |connect_node_id| -%>
 ConnectTo = <%= connect_node_id %>
 <% end -%>

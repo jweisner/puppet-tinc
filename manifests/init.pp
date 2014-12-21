@@ -99,11 +99,13 @@ class tinc(
   #   message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
   # }
 
-  $member_nets = tinc_member_nets($nets_real, $::clientcert)
+  notify { "nets_real => ${nets_real}": }
+  notify { "clientcert => ${::clientcert}": }
+  # $member_nets = tinc_member_nets($nets_real, $::clientcert)
   notify { 'member_nets':
     message => inline_template("member_nets => <%= @member_nets.join(',') %>"),
   }
 
-  net { $member_nets: nets => $nets_real }
-  boot_net { $member_nets: }
+  # net { $member_nets: nets => $nets_real }
+  # boot_net { $member_nets: }
 }

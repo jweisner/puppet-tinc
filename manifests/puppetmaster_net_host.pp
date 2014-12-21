@@ -29,12 +29,12 @@ define tinc::puppetmaster_net_host (
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
     command => "openssl genrsa -out ${private_key_path} 2048",
     creates => $private_key_path,
-    require => File["${key_source_path}/${node_certname}"],
+    require => File["${key_source_path}/${net_id}/${node_certname}"],
   }->
   exec { "${prefixed_node_certname}-public":
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
     command => "openssl rsa -in ${private_key_path} -pubout -out ${public_key_path}",
     creates => $public_key_path,
-    require => File["${key_source_path}/${node_certname}"],
+    require => File["${key_source_path}/${net_id}/${node_certname}"],
   }
 }

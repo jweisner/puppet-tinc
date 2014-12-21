@@ -1,9 +1,12 @@
 # Tinc VPN net
-#
+# Author: Jesse Weisner <jesse@weisner.ca>
+# License: Apache 2.0
 define tinc::net(
+  $key_source_path,
   $nets,
   $net_defaults,
-  $net_id = $name,
+  $net_id       = $name,
+  $service_name = 'tinc',
 ){
 
   $net = merge($net_defaults, $nets[$net_id])
@@ -22,6 +25,7 @@ define tinc::net(
   $node_internal         = split($this_node['internal_cidr'], '/')
   $node_internal_ip      = $node_internal[0]
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
+  $node_port             = pick($this_node['port'], $net['port'], '655')
 
   file { "/etc/tinc/${net_id}":
     ensure  => 'directory',
@@ -30,6 +34,7 @@ define tinc::net(
     mode    => '0750',
     purge   => true,
     recurse => true,
+    notify  => Service[$service_name],
   }->
   file { "/etc/tinc/${net_id}/tinc-up":
     ensure  => 'file',
@@ -37,6 +42,7 @@ define tinc::net(
     group   => 'root',
     mode    => '0550',
     content => template('tinc/tinc-up.erb'),
+    notify  => Service[$service_name],
   }->
   file { "/etc/tinc/${net_id}/tinc-down":
     ensure  => 'file',
@@ -44,6 +50,7 @@ define tinc::net(
     group   => 'root',
     mode    => '0550',
     content => template('tinc/tinc-down.erb'),
+    notify  => Service[$service_name],
   }->
   file { "/etc/tinc/${net_id}/tinc.conf":
     ensure  => 'file',
@@ -51,15 +58,16 @@ define tinc::net(
     group   => 'root',
     mode    => '0440',
     content => template('tinc/tinc.conf.erb'),
+    notify  => Service[$service_name],
   }
 
-  $key_source_path = $net['key_source_path']
   file { "/etc/tinc/${net_id}/rsa_key.priv":
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0400',
     content => file("${key_source_path}/${net_id}/${::clientcert}/rsa_key.pub", 'tinc/missing'),
+    notify  => Service[$service_name],
   }
 
   file { "/etc/tinc/${net_id}/hosts":
@@ -70,16 +78,17 @@ define tinc::net(
     purge   => true,
     recurse => true,
     force   => true,
+    notify  => Service[$service_name],
   }
 
   $net_member_nodes   = $net['member_nodes']
   $net_nodes_prefixed = prefix(keys($net_member_nodes), "${net_id}-")
-  # notify { 'member_net_nodes':
-  #   message => inline_template("net_nodes_prefixed => <%= @net_nodes_prefixed.join(',') %>"),
-  # }
+
   net_host{$net_nodes_prefixed:
     member_nodes    => $net_member_nodes,
     net_id          => $net_id,
-    key_source_path => $net['key_source_path'],
+    net             => $net,
+    key_source_path => $key_source_path,
+    service_name    => $service_name,
   }
 }

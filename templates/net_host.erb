@@ -1,8 +1,8 @@
 ### WARNING: This file is controlled by Puppet ###
-<% if external_ip.to_s != '' -%>
+<% if external_ip.to_s != 'none' -%>
 Address = <%= external_ip %>
 <% end -%>
-<% if node_port.to_s != '' -%>
+<% if node_port.to_s != 'none' -%>
 Port    = <%= node_port %>
 <% end -%>
 Subnet  = <%= internal_network %>

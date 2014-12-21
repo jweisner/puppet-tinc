@@ -14,7 +14,7 @@ define tinc::net(
   $this_node = $net['member_nodes'][$::clientcert]
 
   $node_id               = $this_node['node_id']
-  $device                = $this_node['device']
+  $device                = pick($this_node['device'], $net['device'], '/dev/net/tun')
   $net_connectto         = any2array($net['connectto'])
   $node_connectto        = any2array($this_node['connectto'])
   $connectto_merged      = unique(concat($net_connectto, $node_connectto))

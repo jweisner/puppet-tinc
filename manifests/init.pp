@@ -83,7 +83,7 @@ class tinc(
     mode            => 'router',
     net_enable      => true,
     node_id         => regsubst($::hostname,'[.-]+','','G'),
-    port            => '655',
+    port            => '',
   }
 
   $net_defaults_real = merge($net_defaults_builtin, $net_defaults_hiera)

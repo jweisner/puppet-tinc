@@ -44,6 +44,7 @@ class tinc(
     mode    => '0550',
     purge   => true,
     recurse => true,
+    force   => true,
   }->
   file { '/etc/tinc/nets.boot':
     ensure  => 'file',

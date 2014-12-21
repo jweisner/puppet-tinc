@@ -8,7 +8,7 @@ class tinc::puppetmaster (){
   $nets            = pick(hiera_hash('tinc::nets'), {})
   $nets_list       = keys($nets)
 
-  puppetmaster_nets{$nets_list:
+  puppetmaster_net{$nets_list:
     key_source_path => $key_source_path,
   }
 }

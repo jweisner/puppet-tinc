@@ -8,6 +8,14 @@ class tinc::puppetmaster (){
   $nets            = pick(hiera_hash('tinc::nets'), {})
   $nets_list       = keys($nets)
 
+  file { $key_source_path:
+    ensure => 'directory',
+    owner  => 'puppet',
+    group  => 'puppet',
+    mode   => '0700',
+    # not purging for now
+  }
+
   puppetmaster_net{$nets_list:
     key_source_path => $key_source_path,
     nets            => $nets,

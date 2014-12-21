@@ -9,10 +9,11 @@ define tinc::puppetmaster_net (
 ) {
 
   file {"${key_source_path}/${net_id}":
-    ensure => 'directory',
-    owner  => 'puppet',
-    group  => 'puppet',
-    mode   => '0700',
+    ensure  => 'directory',
+    owner   => 'puppet',
+    group   => 'puppet',
+    mode    => '0700',
+    require => File[$key_source_path],
     # not going to purge contents here, maybe
   }
 

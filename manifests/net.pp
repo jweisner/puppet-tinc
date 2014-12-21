@@ -5,7 +5,8 @@ define tinc::net(
   $net_id = $name,
 ){
 
-  #TODO: extract all of the necessary template vars
+  $node_internal_ip      = '***MAGIC***'
+  $node_internal_netmask = '***MAGIC***'
 
   file { "/etc/tinc/${net_id}":
     ensure  => 'directory',

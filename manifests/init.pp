@@ -88,9 +88,9 @@ class tinc(
 
   $net_defaults_real = merge($net_defaults_builtin, $net_defaults_hiera)
 
-  # notify { 'net_defaults_real:':
-  #   message => join(keys($net_defaults_real), ', ')
-  # }
+  notify { 'net_defaults_real:':
+    message => join(keys($net_defaults_real), ', ')
+  }
 
   $nets_real = $nets_merge? {
     false   => $nets,

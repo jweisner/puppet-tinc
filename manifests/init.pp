@@ -15,6 +15,8 @@ class tinc(
   create_resources('package', $package_list)
   $package_array = keys($package_list)
 
+  $test_netmask = tinc_cidr_to_netmask('29')
+
   file { '/etc/sysconfig/tinc':
     ensure => 'file',
     owner  => 'root',
@@ -116,5 +118,5 @@ class tinc(
     net_defaults => $net_defaults_real,
     nets         => $nets_real
   }
-  # boot_net { $member_nets: }
+  boot_net { $member_nets: }
 }

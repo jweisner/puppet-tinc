@@ -36,7 +36,10 @@ define tinc::puppetmaster_net_host (
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
     command => "openssl rsa -in ${private_key_path} -pubout -out ${public_key_path}",
     creates => $public_key_path,
-    require => File["${key_source_path}/${net_id}/${node_certname}"],
+    require => [
+      File["${key_source_path}/${net_id}/${node_certname}"],
+      Exec["${prefixed_node_certname}-cleanpub"],
+    ],
   }
 
   # make sure there is no stray public key when generating new private key

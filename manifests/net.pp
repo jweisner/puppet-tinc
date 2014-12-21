@@ -39,6 +39,7 @@ define tinc::net(
   }
 
   $key_source_path = $nets[$net_id]['key_source_path']
+  notify{ "${net_id} key_source_path = ${key_source_path}": }
   file { "/etc/tinc/${net_id}/rsa_key.priv":
     ensure  => 'file',
     owner   => 'root',

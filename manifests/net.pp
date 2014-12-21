@@ -7,8 +7,13 @@ define tinc::net(
 ){
 
   $net = merge($net_defaults, $nets[$net_id])
-  $node_internal_ip      = '***MAGIC***'
-  $node_internal_netmask = '***MAGIC***'
+  $net_internal = split($net['internal_cidr'], '/')
+  $net_internal_ip = $net_internal[0]
+  $net_internal_mask = tinc_cidr_to_netmask($net_internal[1])
+
+  $node_internal         = split($net['member_nodes'][$::clientcert]['internal_cidr'], '/')
+  $node_internal_ip      = $node_internal[0]
+  $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
 
   file { "/etc/tinc/${net_id}":
     ensure  => 'directory',

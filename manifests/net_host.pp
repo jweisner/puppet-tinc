@@ -11,7 +11,7 @@ define tinc::net_host(
   $node_certname       = regsubst($prefixed_node_certname, "^${net_id}-", '')
   $this_node           = $member_nodes[$node_certname]
   $node_id             = $this_node['node_id']
-  $external_ip         = $this_node['external_ip']
+  $external_ip         = pick($this_node['external_ip'], '')
   $internal_cidr       = $this_node['internal_cidr']
   $internal_network_ip = tinc_cidr_to_network($internal_cidr)
   $internal_cidr_split = split($internal_cidr, '/')

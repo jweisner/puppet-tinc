@@ -1,5 +1,5 @@
 ### WARNING: This file is controlled by Puppet ###
-<% if external_ip.to_s != 'undef' -%>
+<% if external_ip.to_s != '' -%>
 Address = <%= external_ip %>
 <% end -%>
 Port    = <%= node_port %>

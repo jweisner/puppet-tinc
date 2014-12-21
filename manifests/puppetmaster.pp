@@ -10,5 +10,6 @@ class tinc::puppetmaster (){
 
   puppetmaster_net{$nets_list:
     key_source_path => $key_source_path,
+    nets            => $nets,
   }
 }

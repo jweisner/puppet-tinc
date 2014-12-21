@@ -19,22 +19,31 @@ define tinc::net(
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0750',
+    mode    => '0550',
     content => template('tinc/tinc-up.erb'),
   }->
   file { "/etc/tinc/${net_id}/tinc-down":
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0750',
+    mode    => '0550',
     content => template('tinc/tinc-down.erb'),
   }->
   file { "/etc/tinc/${net_id}/tinc.conf":
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => '0640',
+    mode    => '0440',
     content => template('tinc/tinc.conf.erb'),
+  }
+
+  $key_source_path = $nets[$net_id]['key_source_path']
+  file { "/etc/tinc/${net_id}/rsa_key.priv":
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0400',
+    content => file("${key_source_path}/${net_id}/${::certname}/rsa_key.pub"),
   }
 
   file { "/etc/tinc/${net_id}/hosts":
@@ -52,7 +61,8 @@ define tinc::net(
   #   message => inline_template("net_nodes_prefixed => <%= @net_nodes_prefixed.join(',') %>"),
   # }
   net_host{$net_nodes_prefixed:
-    member_nodes => $net_member_nodes,
-    net_id       => $net_id,
+    member_nodes    => $net_member_nodes,
+    net_id          => $net_id,
+    key_source_path => $nets[$net_id]['key_source_path'],
   }
 }

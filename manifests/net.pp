@@ -45,7 +45,7 @@ define tinc::net(
     owner   => 'root',
     group   => 'root',
     mode    => '0400',
-    content => file("${key_source_path}/${net_id}/${::clientcert}/rsa_key.pub"),
+    content => file("${key_source_path}/${net_id}/${::clientcert}/rsa_key.pub", 'tinc/empty'),
   }
 
   file { "/etc/tinc/${net_id}/hosts":

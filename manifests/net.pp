@@ -66,7 +66,7 @@ define tinc::net(
     owner   => 'root',
     group   => 'root',
     mode    => '0400',
-    content => file("${key_source_path}/${net_id}/${::clientcert}/rsa_key.pub", 'tinc/missing'),
+    content => file("${key_source_path}/${net_id}/${::clientcert}/rsa_key.priv", 'tinc/missing'),
     notify  => Service[$service_name],
   }
 

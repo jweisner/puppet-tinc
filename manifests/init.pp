@@ -72,13 +72,14 @@ class tinc(
   }
 
   $net_defaults_all = {
-    ensure         => present,
-    connectto      => [],
-    device         => '/dev/net/tun',
-    mode           => 'router',
-    net_enable     => true,
-    node_id        => regsubst($::hostname,'[._-]+','','G'),
-    port           => '655',
+    ensure          => present,
+    connectto       => [],
+    device          => '/dev/net/tun',
+    mode            => 'router',
+    net_enable      => true,
+    node_id         => regsubst($::hostname,'[._-]+','','G'),
+    port            => '655',
+    key_source_path => '/var/lib/puppet/tinc',
   }
 
   $net_defaults_real = merge($net_defaults_all, $net_defaults_override)

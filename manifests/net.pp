@@ -15,7 +15,8 @@ define tinc::net(
 
   $node_id               = $this_node['node_id']
   $device                = $this_node['device']
-  $connectto             = any2array($this_node['connectto'])
+  $connectto             = append(any2array($this_node['connectto']), any2array($net['connectto']))
+  $connectto_real        = delete($connectto, $node_id)
   $node_internal         = split($this_node['internal_cidr'], '/')
   $node_internal_ip      = $node_internal[0]
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])

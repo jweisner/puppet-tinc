@@ -72,6 +72,10 @@ class tinc(
     default => hiera_hash('tinc::net_defaults', $net_defaults)
   }
 
+  notify { 'net defaults:':
+    message => join(keys($net_defaults_override), ', ')
+  }
+
   $net_defaults_all = {
     ensure          => present,
     connectto       => [],
@@ -83,7 +87,15 @@ class tinc(
     key_source_path => '/var/lib/puppet/tinc',
   }
 
+  notify { 'net_defaults_all:':
+    message => join(keys($net_defaults_all), ', ')
+  }
+
   $net_defaults_real = merge($net_defaults_all, $net_defaults_override)
+
+  notify { 'net_defaults_real:':
+    message => join(keys($net_defaults_real), ', ')
+  }
 
   $nets_merged = $nets_merge? {
     false   => $nets,

@@ -100,7 +100,7 @@ class tinc(
   #   message => inline_template("nets => <%= @nets_real.keys.join(',') %>"),
   # }
 
-  notify { "nets_real => ${nets_real}":
+  notify { 'nets_real':
     message => join(keys($nets_real['ptrpe']), ' ')
   }
   notify { "clientcert => ${::clientcert}": }

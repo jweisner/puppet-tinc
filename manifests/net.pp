@@ -28,10 +28,6 @@ define tinc::net(
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
   $node_port             = pick($this_node['port'], $net['port'], 'none')
 
-  notify { 'ptrpe connectto count':
-    message => count($connectto),
-  }
-
   file { "/etc/tinc/${net_id}":
     ensure  => 'directory',
     owner   => 'root',

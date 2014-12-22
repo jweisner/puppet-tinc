@@ -21,13 +21,14 @@ define tinc::net(
   $net_connectto         = any2array($net['connectto'])
   $node_connectto        = any2array($this_node['connectto'])
   $connectto_merged      = unique(concat($net_connectto, $node_connectto))
-  $connectto             = delete($connectto_merged, $node_id)
+  $connectto_noself      = delete($connectto_merged, $node_id)
+  $connectto             = delete($connectto_noself, '')
   $node_internal         = split($this_node['internal_cidr'], '/')
   $node_internal_ip      = $node_internal[0]
   $node_internal_netmask = tinc_cidr_to_netmask($net_internal[1])
   $node_port             = pick($this_node['port'], $net['port'], 'none')
 
-  notify { "ptrpe connectto count":
+  notify { 'ptrpe connectto count':
     message => count($connectto),
   }
 

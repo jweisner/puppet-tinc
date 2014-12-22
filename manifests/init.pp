@@ -41,6 +41,14 @@ class tinc(
     unless      => 'chkconfig --list | grep -q tinc'
   }
 
+  file { '/etc/logrotate.d/tinc':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0444',
+    source => 'puppet:///modules/tinc/logrotate-tinc',
+  }
+
   file { '/etc/tinc':
     ensure  => 'directory',
     owner   => 'root',

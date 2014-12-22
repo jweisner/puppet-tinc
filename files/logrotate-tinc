@@ -1,0 +1,9 @@
+/var/log/tinc.*.log {
+  missingok
+  notifempty
+  nocreate
+  sharedscripts
+  postrotate
+    [ -e /etc/init.d/tinc ] && /etc/init.d/tinc restart > /dev/null 2>&1 || true
+  endscript
+}
